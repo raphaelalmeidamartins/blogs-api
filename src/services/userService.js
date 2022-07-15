@@ -23,12 +23,16 @@ module.exports = {
     const exists = await User.findOne({ where: { email: data.email } });
 
     if (exists) {
-      throw new AlreadyExistsError('User already registered');
+      throw new AlreadyExistsError('User already registered', 409);
     }
 
     await User.create(data);
 
     const token = tokenService.create(data.email, data.password);
     return token;
+  },
+  async list() {
+    const users = await User.findAll({ attributes: { exclude: ['password'] } });
+    return users;
   },
 };
