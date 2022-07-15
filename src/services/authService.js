@@ -4,6 +4,9 @@ const validator = require('./helpers/validator');
 const NotFoundError = require('./helpers/errors/NotFoundError');
 const tokenService = require('./tokenService');
 
+const REQUIRED_MSG = 'Some required fields are missing';
+const INVALID_FIELD_MSG = 'Invalid fields';
+
 module.exports = {
   validate: {
     body: validator(
@@ -13,17 +16,17 @@ module.exports = {
           .email()
           .required()
           .messages({
-            'string.empty': 'Some required fields are missing',
-            'string.email': 'Invalid fields',
-            'any.required': 'Some required fields are missing',
+            'string.empty': REQUIRED_MSG,
+            'string.email': INVALID_FIELD_MSG,
+            'any.required': REQUIRED_MSG,
           }),
         password: Joi
           .string()
           .required()
           .messages({
-            'string.empty': 'Some required fields are missing',
-            string: 'Invalid fields',
-            'any.required': 'Some required fields are missing',
+            'string.empty': REQUIRED_MSG,
+            string: INVALID_FIELD_MSG,
+            'any.required': REQUIRED_MSG,
           }),
       }),
     ),
