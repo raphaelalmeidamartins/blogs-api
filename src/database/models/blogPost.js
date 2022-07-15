@@ -2,9 +2,33 @@ const sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   const BlogPost = sequelize.define('BlogPost', {
-    title: DataTypes.STRING,
-    content: DataTypes.STRING,
-    userId: DataTypes.INTEGER,
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    published: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updated: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   }, {
     tableName: 'BlogPosts',
     underscored: false,
@@ -17,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
 
   BlogPost.associate = (models) => {
     BlogPost.belongsTo(models.User, {
-      foreignKey: 'userId', as: 'users'
+      foreignKey: 'userId', as: 'user'
     });
   }
 

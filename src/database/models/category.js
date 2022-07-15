@@ -2,7 +2,16 @@ const sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   const Category = sequelize.define('Category', {
-    name: DataTypes.STRING,
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {
     tableName: 'Categories',
     timestamps: false,
