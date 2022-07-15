@@ -39,7 +39,7 @@ module.exports = {
     const user = await User.findOne({ where: { email } });
 
     if (!user || user.password !== password) {
-      throw new NotFoundError('Invalid fields');
+      throw new NotFoundError('Invalid fields', 400);
     }
 
     const token = await tokenService.create({ email });
