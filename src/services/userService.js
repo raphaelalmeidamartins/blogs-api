@@ -3,6 +3,7 @@ const { User } = require('../database/models');
 const validator = require('./helpers/validator');
 const tokenService = require('./tokenService');
 const AlreadyExistsError = require('./helpers/errors/AlreadyExistsError');
+const NotFoundError = require('./helpers/errors/NotFoundError');
 
 module.exports = {
   validate: {
@@ -12,6 +13,11 @@ module.exports = {
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
         image: Joi.string().required(),
+      }),
+    ),
+    params: validator(
+      Joi.object({
+        id: Joi.number().positive().integer().required(),
       }),
     ),
     async token(token) {
@@ -34,5 +40,17 @@ module.exports = {
   async list() {
     const users = await User.findAll({ attributes: { exclude: ['password'] } });
     return users;
+  },
+  async getById(id) {
+    const user = await User.findOne({
+      attributes: { exclude: ['password'] },
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundError('User does not exist', 404);
+    }
+
+    return user;
   },
 };
