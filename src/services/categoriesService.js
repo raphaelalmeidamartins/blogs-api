@@ -27,7 +27,7 @@ module.exports = {
     return categories;
   },
   async getById(id) {
-    const category = await Category.findOne({ where: { id } });
+    const category = await Category.findByPk(id);
 
     if (!category) {
       throw new NotFoundError('Category does not exist', 404);

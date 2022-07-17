@@ -38,15 +38,19 @@ module.exports = {
     return users;
   },
   async getById(id) {
-    const user = await User.findOne({
-      attributes: { exclude: ['password'] },
-      where: { id },
-    });
+    const user = await User.findByPk(
+      id,
+      { attributes: { exclude: ['password'] } },
+    );
 
     if (!user) {
       throw new NotFoundError('User does not exist', 404);
     }
 
+    return user;
+  },
+  async getByEmail(email) {
+    const user = await User.findOne({ where: { email } });
     return user;
   },
 };
