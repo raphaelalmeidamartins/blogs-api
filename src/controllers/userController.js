@@ -1,3 +1,4 @@
+const tokenService = require('../services/tokenService');
 const userService = require('../services/userService');
 
 module.exports = {
@@ -14,5 +15,11 @@ module.exports = {
     const { id } = await userService.validate.params(req.params);
     const user = await userService.getById(id);
     res.status(200).json(user);
+  },
+  async delete(req, res) {
+    const { id } = tokenService.validate(req.headers.authorization);
+    await userService.delete(id);
+
+    res.sendStatus(204);
   },
 };

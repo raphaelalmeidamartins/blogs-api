@@ -1,5 +1,10 @@
 const Joi = require('joi');
-const { User } = require('../database/models');
+const {
+  BlogPost,
+  PostCategory,
+  User,
+  sequelize,
+} = require('../database/models');
 const validator = require('./helpers/validator');
 const tokenService = require('./tokenService');
 const AlreadyExistsError = require('../errors/AlreadyExistsError');
@@ -38,15 +43,36 @@ module.exports = {
     return users;
   },
   async getById(id) {
-    const user = await User.findByPk(
-      id,
-      { attributes: { exclude: ['password'] } },
-    );
+    const user = await User.findByPk(id, {
+      attributes: { exclude: ['password'] },
+    });
 
     if (!user) {
       throw new NotFoundError('User does not exist', 404);
     }
 
     return user;
+  },
+  async delete(userId) {
+    const { posts } = await User.findByPk(userId, {
+      include: [
+        {
+          model: BlogPost,
+          as: 'posts',
+          attributes: {
+            exclude: ['title', 'content', 'userId', 'published', 'updated'],
+          },
+        },
+      ],
+    });
+
+    sequelize.transaction(async (transaction) => {
+      const deleteLinks = posts.map(({ id: postId }) =>
+        PostCategory.destroy({ where: { postId } }, { transaction }));
+      await Promise.all(deleteLinks);
+      
+      await BlogPost.destroy({ where: { userId } }, { transaction });
+      await User.destroy({ where: { id: userId } }, { transaction });
+    });
   },
 };

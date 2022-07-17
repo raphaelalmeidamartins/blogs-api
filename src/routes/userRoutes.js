@@ -10,6 +10,7 @@ userRoutes.post('/', rescue(userController.register));
 userRoutes.use(rescue(authController.authenticate));
 
 userRoutes.get('/', rescue(userController.list));
+userRoutes.delete('/me', rescue(userController.delete));
 userRoutes.get('/:id', rescue(userController.getById));
 
 module.exports = userRoutes;
