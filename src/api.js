@@ -13,10 +13,8 @@ app.use(express.json());
 
 app.use('/login', loginRoutes);
 
-app.use(authController.authenticate);
-
-app.use('/user', userRoutes);
-app.use('/categories', categoriesRoutes);
+app.use('/user', authController.authenticate, userRoutes);
+app.use('/categories', authController.authenticate, categoriesRoutes);
 
 app.use(errorMiddleware);
 
