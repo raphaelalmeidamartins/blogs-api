@@ -13,7 +13,13 @@ module.exports = {
     if (!authorization) {
       next(new NotFoundError('Token not found', 401));
     }
-    tokenService.validate(authorization);
+
+    try {
+      tokenService.validate(authorization);
+    } catch (err) {
+      next(err);
+    }
+
     next();
   },
 };
