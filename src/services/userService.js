@@ -28,9 +28,9 @@ module.exports = {
       throw new AlreadyExistsError('User already registered', 409);
     }
 
-    await User.create(data);
+    const { id } = await User.create(data);
 
-    const token = tokenService.create(data.email, data.password);
+    const token = tokenService.create(id);
     return token;
   },
   async list() {
@@ -47,10 +47,6 @@ module.exports = {
       throw new NotFoundError('User does not exist', 404);
     }
 
-    return user;
-  },
-  async getByEmail(email) {
-    const user = await User.findOne({ where: { email } });
     return user;
   },
 };

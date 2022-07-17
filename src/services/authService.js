@@ -38,7 +38,7 @@ module.exports = {
       throw new NotFoundError('Invalid fields', 400);
     }
 
-    const token = await tokenService.create({ email });
+    const token = await tokenService.create({ id: user.id });
     return token;
   },
 };
