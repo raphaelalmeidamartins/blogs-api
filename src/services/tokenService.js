@@ -8,7 +8,7 @@ module.exports = {
   },
 
   validate(authorization) {
-    const payload = jwt.verify(authorization, process.env.JWT_SECRET);
+    const { payload } = jwt.verify(authorization, process.env.JWT_SECRET);
     return payload;
   },
 };
