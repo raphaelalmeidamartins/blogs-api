@@ -2,8 +2,8 @@ const Joi = require('joi');
 const { User } = require('../database/models');
 const validator = require('./helpers/validator');
 const tokenService = require('./tokenService');
-const AlreadyExistsError = require('./helpers/errors/AlreadyExistsError');
-const NotFoundError = require('./helpers/errors/NotFoundError');
+const AlreadyExistsError = require('../errors/AlreadyExistsError');
+const NotFoundError = require('../errors/NotFoundError');
 
 module.exports = {
   validate: {
@@ -20,10 +20,6 @@ module.exports = {
         id: Joi.number().positive().integer().required(),
       }),
     ),
-    async token(token) {
-      const payload = tokenService.validate(token);
-      return payload;
-    },
   },
   async register(data) {
     const exists = await User.findOne({ where: { email: data.email } });
