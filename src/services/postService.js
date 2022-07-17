@@ -14,6 +14,8 @@ const categoriesService = require('./categoriesService');
 const REQUIRED_MSG = 'Some required fields are missing';
 const INVALID_FIELD_MSG = 'Invalid fields';
 
+/* The numbers in the Errors constructor are the status code */
+
 module.exports = {
   validate: {
     body: {
@@ -60,6 +62,18 @@ module.exports = {
       }),
     ),
   },
+  async exists(postId) {
+    const exists = await BlogPost.findByPk(postId);
+
+    if (!exists) {
+      throw new NotFoundError('Post does not exist', 404);
+    }
+  },
+  checkAuthor(post, userId) {
+    if (post.userId !== userId) {
+      throw new UnauthorizedError('Unauthorized user', 401);
+    }
+  },
   async create(data, userId) {
     const result = sequelize.transaction(async (transaction) => {
       const { dataValues: post } = await BlogPost.create(
@@ -85,19 +99,28 @@ module.exports = {
     return result;
   },
   async edit(data, postId, userId) {
-    const exists = await BlogPost.findByPk(postId);
+    await this.exists(postId);
 
-    if (!exists) {
-      throw new NotFoundError('Post does not exist', 404);
-    }
-    if (exists.userId !== userId) {
-      throw new UnauthorizedError('Unauthorized user', 401);
-    }
+    const post = await BlogPost.findByPk(postId);
+
+    this.checkAuthor(post, userId);
 
     await BlogPost.update(data, { where: { id: postId } });
 
-    const post = await this.getById(postId);
-    return post;
+    const updatedPost = await this.getById(postId);
+    return updatedPost;
+  },
+  async delete(postId, userId) {
+    await this.exists(postId);
+
+    const post = await BlogPost.findByPk(postId);
+
+    this.checkAuthor(post, userId);
+
+    sequelize.transaction(async (transaction) => {
+      await PostCategory.destroy({ where: { postId } }, { transaction });
+      await BlogPost.destroy({ where: { id: postId } }, { transaction });
+    });
   },
   async list() {
     const posts = await BlogPost.findAll({

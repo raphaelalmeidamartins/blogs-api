@@ -11,6 +11,7 @@ postRoutes.post('/', rescue(postController.create));
 postRoutes.get('/', rescue(postController.list));
 postRoutes.route('/:id')
   .get(rescue(postController.getById))
-  .put(rescue(postController.edit));
+  .put(rescue(postController.edit))
+  .delete(rescue(postController.delete));
 
 module.exports = postRoutes;
