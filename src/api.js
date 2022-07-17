@@ -2,6 +2,7 @@ const express = require('express');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 const categoriesRoutes = require('./routes/categoriesRoutes');
 const loginRoutes = require('./routes/loginRoutes');
+const postRoutes = require('./routes/postRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 // ...
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use('/login', loginRoutes);
 app.use('/user', userRoutes);
 app.use('/categories', categoriesRoutes);
+app.use('/post', postRoutes);
 
 app.use(errorMiddleware);
 
