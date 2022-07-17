@@ -11,14 +11,9 @@ module.exports = {
   authenticate(req, _res, next) {
     const { authorization } = req.headers;
     if (!authorization) {
-      next(new NotFoundError('Token not found', 401));
+      throw new NotFoundError('Token not found', 401);
     }
-
-    try {
-      tokenService.validate(authorization);
-    } catch (err) {
-      next(err);
-    }
+    tokenService.validate(authorization);
 
     next();
   },
