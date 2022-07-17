@@ -1,4 +1,6 @@
 const authService = require('../services/authService');
+const NotFoundError = require('../errors/NotFoundError');
+const tokenService = require('../services/tokenService');
 
 module.exports = {
   async login(req, res) {
@@ -6,9 +8,12 @@ module.exports = {
     const token = await authService.login(email, password);
     res.status(200).json({ token });
   },
-  async authenticate(req, _res, next) {
+  authenticate(req, _res, next) {
     const { authorization } = req.headers;
-    await authService.validate.token(authorization);
+    if (!authorization) {
+      next(new NotFoundError('Token not found', 401));
+    }
+    tokenService.validate(authorization);
     next();
   },
 };

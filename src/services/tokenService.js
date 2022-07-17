@@ -7,8 +7,8 @@ module.exports = {
     return token;
   },
 
-  async validate(token) {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+  validate(authorization) {
+    const payload = jwt.verify(authorization, process.env.JWT_SECRET);
     return payload;
   },
 };

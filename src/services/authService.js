@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const { User } = require('../database/models');
 const validator = require('./helpers/validator');
-const NotFoundError = require('./helpers/errors/NotFoundError');
+const NotFoundError = require('../errors/NotFoundError');
 const tokenService = require('./tokenService');
 
 const REQUIRED_MSG = 'Some required fields are missing';
@@ -30,10 +30,6 @@ module.exports = {
           }),
       }),
     ),
-    async token(token) {
-      const payload = tokenService.validate(token);
-      return payload;
-    },
   },
   async login(email, password) {
     const user = await User.findOne({ where: { email } });
