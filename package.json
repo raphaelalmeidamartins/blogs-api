@@ -15,7 +15,8 @@
     "morgan": "^1.10.0",
     "mysql2": "2.1.0",
     "sequelize": "6.3.4",
-    "shelljs": "0.8.4"
+    "shelljs": "0.8.4",
+    "swagger-ui-express": "^4.5.0"
   },
   "main": "src/server.js",
   "scripts": {
@@ -33,6 +34,7 @@
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "devDependencies": {
+    "@types/swagger-ui-express": "^4.1.3",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.2.0",
     "eslint-config-trybe-backend": "1.0.3",
