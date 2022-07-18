@@ -7,6 +7,7 @@ const postRoutes = Router();
 
 postRoutes.use(rescue(authController.authenticate));
 
+postRoutes.get('/search', rescue(postController.search));
 postRoutes.post('/', rescue(postController.create));
 postRoutes.get('/', rescue(postController.list));
 postRoutes.route('/:id')

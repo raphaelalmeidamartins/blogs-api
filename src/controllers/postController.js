@@ -28,12 +28,23 @@ module.exports = {
     res.sendStatus(204);
   },
   async list(req, res) {
-    const users = await postService.list();
-    res.status(200).json(users);
+    const posts = await postService.list();
+    res.status(200).json(posts);
   },
   async getById(req, res) {
     const { id } = await postService.validate.params(req.params);
     const post = await postService.getById(id);
     res.status(200).json(post);
+  },
+  async search(req, res) {
+    const { q: searchTerm } = req.query;
+    let posts;
+
+    if (searchTerm) {
+      posts = await postService.search(searchTerm);
+    } else {
+      posts = await postService.list();
+    }
+    res.status(200).json(posts);
   },
 };

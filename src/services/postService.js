@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { Op } = require('sequelize');
 const {
   BlogPost,
   Category,
@@ -13,6 +14,17 @@ const categoriesService = require('./categoriesService');
 
 const REQUIRED_MSG = 'Some required fields are missing';
 const INVALID_FIELD_MSG = 'Invalid fields';
+
+const INCLUDE_OPTIONS = {
+  include: [
+    {
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    },
+    { model: Category, as: 'categories' },
+  ],
+};
 
 /* The numbers in the Errors constructor are the status code */
 
@@ -124,38 +136,32 @@ module.exports = {
   },
   async list() {
     const posts = await BlogPost.findAll({
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: { exclude: ['password', 'published', 'updated'] },
-        },
-        {
-          model: Category,
-          as: 'categories',
-        },
-      ],
+      ...INCLUDE_OPTIONS,
     });
 
     return posts;
   },
   async getById(id) {
-    const post = await BlogPost.findByPk(id, {
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: { exclude: ['password', 'published', 'updated'] },
-        },
-        {
-          model: Category,
-          as: 'categories',
-        },
-      ],
-    });
+    const post = await BlogPost.findByPk(id, { ...INCLUDE_OPTIONS });
 
     if (!post) throw new NotFoundError('Post does not exist', 404);
 
     return post;
+  },
+  async search(searchTerm) {
+    const posts = await BlogPost.findAll({
+      ...INCLUDE_OPTIONS,
+      where: {
+        [Op.or]: [
+          {
+            title: { [Op.like]: searchTerm },
+          },
+          {
+            content: { [Op.like]: searchTerm },
+          },
+        ],
+      },
+    });
+    return posts;
   },
 };
