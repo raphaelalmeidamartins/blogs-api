@@ -1,0 +1,968 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Blogs API",
+    "description": "Esta é uma API de blog que permite criar usuários, categorias e posts. A autenticação é feita com JWT (Json Web Token)",
+    "contact": {
+      "email": "raphael.almeida.martins@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "API de teste"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Rota de login",
+        "description": "Rota onde o usuário faz login e recebe o token",
+        "tags": ["Login"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "examples": {
+                "login": {
+                  "value": {
+                    "email": "fulano@gmail.com",
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields are invalid or missing"
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "summary": "Rota de cadastro de usuário",
+        "description": "Rota responsável pelo cadastro de novos usuários",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUser"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "displayName": "Brett Wiltshire",
+                    "email": "brett@email.com",
+                    "password": "123456",
+                    "image": "http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields are invalid or missing"
+          },
+          "409": {
+            "description": "User already registered"
+          }
+        }
+      },
+      "get": {
+        "summary": "Rota de listagem de usuários",
+        "description": "Rota responsável por listar todos os usuários cadastrados",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListUsers"
+                },
+                "examples": {
+                  "listUsers": {
+                    "value": [
+                      {
+                        "id": 1,
+                        "displayName": "Lewis Hamilton",
+                        "email": "lewishamilton@gmail.com",
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+                      },
+                      {
+                        "id": 2,
+                        "displayName": "Britney Spears",
+                        "email": "itsbritneybh@gmail.com",
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Britney_Spears%2C_Roundhouse%2C_London_%28Apple_Music_Festival_2016%29_%2830072929931%29_%28cropped%29.jpg"
+                      },
+                      {
+                        "id": 3,
+                        "displayName": "Sonic the Hedgehog",
+                        "email": "blueblur@gmail.com",
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/f/f7/SonicSeriesLogo.png"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "summary": "Rota de encontrar usuário pelo id",
+        "description": "Rota responsável por retornar usuário de acordo com id",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id do usuário a ser buscado"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUser"
+                },
+                "examples": {
+                  "getUser": {
+                    "value": {
+                      "id": 1,
+                      "displayName": "Lewis Hamilton",
+                      "email": "lewishamilton@gmail.com",
+                      "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User does not exist"
+          }
+        }
+      }
+    },
+    "/user/me": {
+      "delete": {
+        "summary": "Rota de excluir usuário",
+        "description": "Rota responsável por excluir usuário de acordo com id contido no token. Também exclui todas as publicações relacionadas",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User does not exist"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "post": {
+        "summary": "Rota de cadastro de categories",
+        "description": "Rota responsável pelo cadastro de novas categorias",
+        "tags": ["Categories"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategory"
+              },
+              "examples": {
+                "category": {
+                  "value": {
+                    "name": "Typescript"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCategory"
+                },
+                "examples": {
+                  "category": {
+                    "value": {
+                      "id": 3,
+                      "name": "Typescript"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields are invalid or missing"
+          },
+          "409": {
+            "description": "Category already registered"
+          }
+        }
+      },
+      "get": {
+        "summary": "Rota de listagem de categorias",
+        "description": "Rota responsável por listar todos as categorias cadastradas",
+        "tags": ["Categories"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListCategories"
+                },
+                "examples": {
+                  "listCategories": {
+                    "value": [
+                      {
+                          "id": 1,
+                          "name": "Inovação"
+                      },
+                      {
+                          "id": 2,
+                          "name": "Escola"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Rota de encontrar categoria pelo id",
+        "description": "Rota responsável por retornar categoria de acordo com id",
+        "tags": ["Categories"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id da categoria a ser buscada"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCategory"
+                },
+                "examples": {
+                  "getCategory": {
+                    "value": {
+                      "id": 3,
+                      "name": "Typescript"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Category does not exist"
+          }
+        }
+      }
+    },
+    "/post": {
+      "post": {
+        "summary": "Rota de criação de publicações",
+        "description": "Rota responsável pela criação de novas publicações",
+        "tags": ["Posts"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostBody"
+              },
+              "examples": {
+                "createPost": {
+                  "value": {
+                    "title": "Latest updates, August 1st",
+                    "content": "The whole text for the blog post goes here in this key",
+                    "categoryIds": [1, 2]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePost"
+                },
+                "examples": {
+                  "post": {
+                    "value": {
+                      "id": 3,
+                      "title": "Latest updates, August 1st",
+                      "content": "The whole text for the blog post goes here in this key",
+                      "userId": 1,
+                      "updated": "2022-05-18T18:00:01.196Z",
+                      "published": "2022-05-18T18:00:01.196Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields are invalid or missing"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "summary": "Rota de listagem de publicações",
+        "description": "Rota responsável por listar todos as publicações criadas",
+        "tags": ["Posts"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPosts"
+                },
+                "examples": {
+                  "listPosts": {
+                    "value": [
+                      {
+                        "id": 1,
+                        "title": "Post do Ano",
+                        "content": "Melhor post do ano",
+                        "userId": 1,
+                        "published": "2011-08-01T19:58:00.000Z",
+                        "updated": "2011-08-01T19:58:51.000Z",
+                        "user": {
+                          "id": 1,
+                          "displayName": "Lewis Hamilton",
+                          "email": "lewishamilton@gmail.com",
+                          "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+                        },
+                        "categories": [
+                          {
+                            "id": 1,
+                            "name": "Inovação"
+                          }
+                        ]
+                      },
+                      {
+                        "id": 2,
+                        "title": "Post 2",
+                        "content": "Melhor post 2",
+                        "userId": 1,
+                        "published": "2011-08-01T20:58:00.000Z",
+                        "updated": "2011-08-01T20:58:51.000Z",
+                        "user": {
+                          "id": 1,
+                          "displayName": "Lewis Hamilton",
+                          "email": "lewishamilton@gmail.com",
+                          "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+                        },
+                        "categories": [
+                          {
+                            "id": 1,
+                            "name": "Inovação"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/post/{id}": {
+      "get": {
+        "summary": "Rota de encontrar publicação pelo id",
+        "description": "Rota responsável por retornar publicação de acordo com id",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id da publicação a ser buscada"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPost"
+                },
+                "examples": {
+                  "getPost": {
+                    "value": {
+                      "id": 1,
+                      "title": "Post do Ano",
+                      "content": "Melhor post do ano",
+                      "userId": 1,
+                      "published": "2011-08-01T19:58:00.000Z",
+                      "updated": "2011-08-01T19:58:51.000Z",
+                      "user": {
+                          "id": 1,
+                          "displayName": "Lewis Hamilton",
+                          "email": "lewishamilton@gmail.com",
+                          "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+                      },
+                      "categories": [
+                          {
+                              "id": 1,
+                              "name": "Inovação"
+                          }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post does not exist"
+          }
+        }
+      },
+      "put": {
+        "summary": "Rota de atualizar publicação pelo id",
+        "description": "Rota responsável por atualizar publicação de acordo com id",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id da publicação a ser atualizada"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostBody"
+              },
+              "examples": {
+                "createPost": {
+                  "value": {
+                    "title": "Latest updates, August 1st",
+                    "content": "The whole text for the blog post goes here in this key"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPost"
+                },
+                "examples": {
+                  "getPost": {
+                    "value": {
+                      "id": 1,
+                      "title": "Latest updates, August 1st",
+                      "content": "The whole text for the blog post goes here in this key",
+                      "userId": 1,
+                      "published": "2011-08-01T19:58:00.000Z",
+                      "updated": "2011-08-01T19:58:51.000Z",
+                      "user": {
+                          "id": 1,
+                          "displayName": "Lewis Hamilton",
+                          "email": "lewishamilton@gmail.com",
+                          "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+                      },
+                      "categories": [
+                          {
+                              "id": 1,
+                              "name": "Inovação"
+                          }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields are invalid or missing"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post does not exist"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Rota de excluir publicação pelo id",
+        "description": "Rota responsável por excluir publicação de acordo com id",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id da publicação a ser excluída"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post does not exist"
+          }
+        }
+      }
+    },
+    "/post/search": {
+      "get": {
+        "summary": "Rota de pesquisar publicações",
+        "description": "Rota responsável por pesquisar publicação de acordo com termo de pesquisa fornecido na query",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "termo de pesquisa"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPosts"
+                },
+                "examples": {
+                  "getPost": {
+                    "value": [
+                      {
+                        "id": 2,
+                        "title": "Vamos que vamos",
+                        "content": "Foguete não tem ré",
+                        "userId": 1,
+                        "published": "2011-08-01T19:58:00.000Z",
+                        "updated": "2011-08-01T19:58:51.000Z",
+                        "user": {
+                          "id": 1,
+                          "displayName": "Lewis Hamilton",
+                          "email": "lewishamilton@gmail.com",
+                          "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+                        },
+                        "categories": [
+                          {
+                            "id": 2,
+                            "name": "Escola"
+                          }
+                        ]
+                      },
+                      {
+                        "id": 3,
+                        "title": "Post 2",
+                        "content": "Vamos que vamos",
+                        "userId": 1,
+                        "published": "2011-08-01T20:58:00.000Z",
+                        "updated": "2011-08-01T20:58:51.000Z",
+                        "user": {
+                          "id": 1,
+                          "displayName": "Lewis Hamilton",
+                          "email": "lewishamilton@gmail.com",
+                          "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+                        },
+                        "categories": [
+                          {
+                            "id": 1,
+                            "name": "Inovação"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateUser": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "GetUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "ListUsers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "image": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateCategory": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GetCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ListCategories": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreatePostBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "categoryIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "UpdatePostBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "CreatePost": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "updated": {
+            "type": "string"
+          },
+          "published": {
+            "type": "string"
+          }
+        }
+      },
+      "GetPost": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "updated": {
+            "type": "string"
+          },
+          "published": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "displayName": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "image": {
+                "type": "string"
+              }
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListPosts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "number"
+            },
+            "updated": {
+              "type": "string"
+            },
+            "published": {
+              "type": "string"
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "displayName": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              }
+            },
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
