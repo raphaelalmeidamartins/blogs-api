@@ -106,17 +106,17 @@ Para rodar está aplicação é necessário ter **Git**, **Docker** e o **Docker
 
 ### 1 - Clone o repositório
 ```sh
-git clone git@github.com:raphaelalmeidamartins/store-manager.git
+git clone git@github.com:raphaelalmeidamartins/blogs-api.git
 ```
 
 ### 2 - Rode os containers executando o comando abaixo na pasta raiz da aplicação
 ```sh
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 ### 3 - Rode o comando para abrir o terminal do container store_manager
 ```sh
-docker exec -it store_manager bash
+docker exec -it blogs_api bash
 ```
 
 ### 4 - No terminal do container, installe as dependências e execute a aplicação
