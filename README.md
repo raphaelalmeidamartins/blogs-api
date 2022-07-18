@@ -114,7 +114,7 @@ git clone git@github.com:raphaelalmeidamartins/blogs-api.git
 docker-compose up -d --build
 ```
 
-### 3 - Rode o comando para abrir o terminal do container store_manager
+### 3 - Rode o comando para abrir o terminal do container blogs_api
 ```sh
 docker exec -it blogs_api bash
 ```
