@@ -1,17 +1,13 @@
 require('dotenv').config();
 
 const options = {
-  host: process.env.DB_HOSTNAME,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  host: process.env.DB_HOSTNAME,
+  port: process.env.DB_PORT,
   dialect: 'postgres',
-  dialectOptions: {
-    timezone: 'Z',
-  },
-  logging: process.env.DEBUG !== 'false',
-};
+}
 
 module.exports = {
   development: {
