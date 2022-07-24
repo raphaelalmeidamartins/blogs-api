@@ -10,6 +10,8 @@
 Node.js and Express.js project developed by [Raphael Martins](https://www.linkedin.com/in/raphaelameidamartins/) at the end of Unit 24 ([Back-end Development Module](https://github.com/raphaelalmeidamartins/trybe_exercicios/tree/main/3_Desenvolvimento-Back-end)) of Trybe's Web Development course. I was approved with 100% of the mandatory and optional requirements met.
 
 We had to create a blog RESTful API using MSC (Model-Service-Controller) architecture. We must use the Sequelize.js ORM to connect with the database, and handle authentication with Json Web Token.
+
+[Click here](https://blogs-api-24072022.herokuapp.com/docs/en/) to check out the final version of the project on your browser.
 <br />
 </details>
 
@@ -19,6 +21,8 @@ We had to create a blog RESTful API using MSC (Model-Service-Controller) archite
 Projeto Node.js, Express.js e Sequelize.js desenvolvido por [Raphael Martins](https://www.linkedin.com/in/raphaelameidamartins/) ao final do Bloco 24 ([Módulo Desenvolvimento Back-end](https://github.com/raphaelalmeidamartins/trybe_exercicios/tree/main/3_Desenvolvimento-Back-end)) do curso de Desenvolvimento Web da Trybe. Fui aprovado com 100% dos requisitos obrigatórios e opcionais atingidos.
 
 Tivemos que criar uma API RESTful de blog usando a arquitetura MSC (Model-Service-Controller). A conexão com o banco de dados precisou ser feita com o ORM Sequelize e a autenticação com Json Web Token.
+
+[Clique aqui](https://blogs-api-24072022.herokuapp.com/docs/br/) para conferir a versão final do projeto no seu navegador.
 <br />
 </details>
 
@@ -58,7 +62,7 @@ Tivemos que criar uma API RESTful de blog usando a arquitetura MSC (Model-Servic
 * Docker
 * MySQL
 
-## :hammer_and_wrench: Installation and execution/Instalação e execução
+## :whale2: Installation and execution with Docker/Instalação e execução com Docker
 
 <details>
   <summary markdown="span"><strong>:us: English</strong></summary><br />
