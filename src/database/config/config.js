@@ -1,10 +1,10 @@
 require('dotenv').config();
 
 const options = {
-  username: process.env.DB_USER,
+  username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  host: process.env.DB_HOSTNAME,
+  database: process.env.DATABASE,
+  host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   dialect: 'postgres',
 }
@@ -16,4 +16,7 @@ module.exports = {
   test: {
     ...options,
   },
+  production: {
+    ...options,
+  }
 };
