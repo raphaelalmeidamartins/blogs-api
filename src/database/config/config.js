@@ -7,7 +7,7 @@ const options = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   dialect: 'postgres',
-}
+};
 
 module.exports = {
   development: {
@@ -18,5 +18,5 @@ module.exports = {
   },
   production: {
     ...options,
-  }
+  },
 };

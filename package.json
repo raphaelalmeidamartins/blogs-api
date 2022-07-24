@@ -14,13 +14,13 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "mysql2": "2.1.0",
+    "pg": "^8.7.3",
     "sequelize": "6.3.4",
     "shelljs": "0.8.4",
     "swagger-ui-express": "^4.5.0"
   },
   "main": "src/server.js",
   "scripts": {
-    "prestart": "npx sequelize-cli db:create && npx sequelize-cli db:migrate",
     "start": "node .",
     "start:test": "API_PORT=3030 NODE_ENV=test npm start",
     "kill:test": "kill -9 $(lsof -t -i:3030) &> /dev/null",
