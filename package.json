@@ -16,7 +16,7 @@
     "morgan": "^1.10.0",
     "mysql2": "2.1.0",
     "pg": "^8.7.3",
-    "sequelize": "6.3.4",
+    "sequelize": "6.7.0",
     "shelljs": "0.8.4",
     "swagger-ui-express": "^4.5.0"
   },
