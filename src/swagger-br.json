@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Blogs API",
-    "description": "Esta é uma API de blog que permite criar usuários, categorias e posts. A autenticação é feita com JWT (Json Web Token)",
+    "description": "Esta é uma API de blog que permite criar usuários, categorias e posts. A autenticação é feita com JWT (Json Web Token). Para acessar as rotas autenticadas, faça login ou crie um novo usuário para receber o token.",
     "contact": {
       "email": "raphael.almeida.martins@gmail.com"
     },
