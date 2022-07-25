@@ -147,7 +147,7 @@ Acesse a rota http://localhost:3000/docs/br para acessar a documentação em por
 <details>
   <summary markdown="span"><strong>:us: English</strong></summary><br />
 
-With the application running, access the http://localhost:3000/docs/en route on your browser to see the English documentation. If you prefer, [access the deploy on Heroku](https://blogs-api-24072022.herokuapp.com/docs/en/)
+With the application running, enter the http://localhost:3000/docs/en route on your browser to see the English documentation. If you prefer, [checkout the deploy on Heroku](https://blogs-api-24072022.herokuapp.com/docs/en/)
 <br />
 </details>
 
