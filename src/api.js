@@ -17,8 +17,18 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/docs/br', swaggerUI.serve, swaggerUI.setup(swaggerSettingsBr));
-app.use('/docs/en', swaggerUI.serve, swaggerUI.setup(swaggerSettingsEn));
+const options = {};
+
+app.use(
+  '/docs/br',
+  swaggerUI.serveFiles(swaggerSettingsBr, options),
+  swaggerUI.setup(swaggerSettingsBr),
+);
+app.use(
+  '/docs/br',
+  swaggerUI.serveFiles(swaggerSettingsEn, options),
+  swaggerUI.setup(swaggerSettingsEn),
+);
 
 app.use('/login', loginRoutes);
 app.use('/user', userRoutes);
