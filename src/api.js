@@ -25,7 +25,7 @@ app.use(
   swaggerUI.setup(swaggerSettingsBr),
 );
 app.use(
-  '/docs/br',
+  '/docs/en',
   swaggerUI.serveFiles(swaggerSettingsEn, options),
   swaggerUI.setup(swaggerSettingsEn),
 );
